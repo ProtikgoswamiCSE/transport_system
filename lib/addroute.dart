@@ -64,8 +64,8 @@ class _TransportScreenState extends State<TransportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favourite Routes',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title:
+            const Text('Routes', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
       ),
