@@ -17,14 +17,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TransportScreen extends StatelessWidget {
+class TransportScreen extends StatefulWidget {
   const TransportScreen({super.key});
+
+  @override
+  _TransportScreenState createState() => _TransportScreenState();
+}
+
+class _TransportScreenState extends State<TransportScreen> {
+  String? selectedPlace;
+  String? selectedTransport;
+
+  final List<String> places = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
+  final List<String> endPlace = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
+
+  void _onSearch() {
+    if (selectedPlace != null && selectedTransport != null) {
+      print("Searching for $selectedTransport from $selectedPlace...");
+    } else {
+      print("Please select both Place and Transport Type.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favourite Routes', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Favourite Routes',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
       ),
@@ -32,22 +52,70 @@ class TransportScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search Bar
+            // Dropdowns and Search Button in One Row
             Row(
               children: [
+                // Place Dropdown
                 Expanded(
-                  child: TextField(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedPlace,
+                    hint: const Text("start Place"),
+                    items: places.map((String place) {
+                      return DropdownMenuItem<String>(
+                        value: place,
+                        child: Text(place),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedPlace = newValue;
+                      });
+                    },
                     decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.filter_list),
-                  onPressed: () {},
+
+                // Transport Type Dropdown
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedTransport,
+                    hint: const Text("End Place"),
+                    items: endPlace.map((String transport) {
+                      return DropdownMenuItem<String>(
+                        value: transport,
+                        child: Text(transport),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedTransport = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Search Button
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                    textStyle: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: _onSearch,
+                  child: const Icon(Icons.search, color: Colors.white),
                 ),
               ],
             ),
@@ -58,26 +126,10 @@ class TransportScreen extends StatelessWidget {
               child: ListView(
                 children: const [
                   TransportCard(
-                    icon: Icons.directions_bus,
-                    title: "Bus № 31",
-                    from: "72-74 Oxford St.",
-                    to: "20 Grosvenor Sq.",
-                    time: "16:00",
-                    price: "£10.00",
-                  ),
-                  TransportCard(
                     icon: Icons.train,
                     title: "Central Line",
                     from: "Great Portland St.",
                     to: "Baker Street",
-                    time: "16:15",
-                    price: "£5.00",
-                  ),
-                  TransportCard(
-                    icon: Icons.tram,
-                    title: "Tram № 17",
-                    from: "377 Dumsford Rd.",
-                    to: "136 Buckhold Rd.",
                     time: "16:15",
                     price: "£5.00",
                   ),
@@ -100,7 +152,8 @@ class TransportScreen extends StatelessWidget {
                   SizedBox(width: 8),
                   Text(
                     "Add new route",
-                    style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -144,7 +197,9 @@ class TransportCard extends StatelessWidget {
               children: [
                 Icon(icon, color: Colors.blue),
                 const SizedBox(width: 8),
-                Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(title,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
                 const Spacer(),
                 const Icon(Icons.access_time, size: 16),
                 const SizedBox(width: 4),
@@ -171,7 +226,7 @@ class TransportCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // Price
+            //Price
             Text(
               "Price: $price",
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
