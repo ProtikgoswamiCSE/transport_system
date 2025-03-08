@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:transport_system/addroute.dart';
 import 'package:transport_system/login.dart';
-import 'package:transport_system/navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -101,6 +101,17 @@ class MyWidget extends StatelessWidget {
               title: Text("Home"),
               onTap: () {
                 Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.train),
+              title: Text("Bus Schdule"),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TransportScreen(),
+                    ));
               },
             ),
             ListTile(
