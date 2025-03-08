@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:transport_system/login.dart';
 import 'package:transport_system/navigation.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+// Wrap the app with MaterialApp
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Basic UI in Flutter",
+      home: LoginScreen(), // Set LoginScreen as the initial screen
+    );
+  }
+}
 
 class MyWidget extends StatelessWidget {
   MyWidget({super.key});
@@ -21,10 +40,6 @@ class MyWidget extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 70,
         titleSpacing: 10,
-        title: Icon(
-          Icons.train,
-          size: 30,
-        ),
         backgroundColor: const Color.fromARGB(255, 33, 169, 85),
         actions: [
           IconButton(
@@ -97,7 +112,15 @@ class MyWidget extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text("Logout"),
+              title: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginScreen(),
+                        ));
+                  },
+                  child: Text("Logout")),
               onTap: () {
                 Navigator.pop(context);
               },
