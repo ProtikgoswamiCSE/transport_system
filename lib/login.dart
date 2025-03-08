@@ -1,21 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login Interface',
-      home: const LoginScreen(),
-    );
-  }
-}
+import 'package:transport_system/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -62,7 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.greenAccent.withOpacity(0.8), // Slight transparency
+                  color: Colors.greenAccent
+                      .withOpacity(0.8), // Slight transparency
                   borderRadius: BorderRadius.circular(15),
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -73,7 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const Text(
                         "Login Page",
-                        style: TextStyle(// Fixed background color
+                        style: TextStyle(
+                          // Fixed background color
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -97,7 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
-                          } else if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
+                          } else if (!RegExp(
+                                  r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
                               .hasMatch(value)) {
                             return 'Enter a valid email';
                           }
@@ -116,7 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextFormField(
                         controller: transportIdController,
-                        decoration: const InputDecoration(labelText: "Transport ID"),
+                        decoration:
+                            const InputDecoration(labelText: "Transport ID"),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your Transport ID';
@@ -126,7 +114,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextFormField(
                         controller: phoneController,
-                        decoration: const InputDecoration(labelText: "Phone No"),
+                        decoration:
+                            const InputDecoration(labelText: "Phone No"),
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -139,7 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextFormField(
                         controller: bloodGroupController,
-                        decoration: const InputDecoration(labelText: "Blood Group"),
+                        decoration:
+                            const InputDecoration(labelText: "Blood Group"),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your Blood Group';
@@ -149,7 +139,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: _submitForm,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyWidget(),
+                              ));
+                        },
                         child: const Text("Submit"),
                       ),
                     ],
