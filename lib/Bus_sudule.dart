@@ -1,21 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Transport Routes',
-      home: const TransportScreen(),
-    );
-  }
-}
+import 'package:transport_system/addroute.dart';
 
 class TransportScreen extends StatefulWidget {
   const TransportScreen({super.key});
@@ -145,17 +129,26 @@ class _TransportScreenState extends State<TransportScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.add, color: Colors.blue),
-                  SizedBox(width: 8),
-                  Text(
-                    "Add new route",
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
-                  ),
-                ],
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Addroute(),
+                      ));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.add, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text(
+                      "Add new route",
+                      style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

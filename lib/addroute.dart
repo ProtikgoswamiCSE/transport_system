@@ -1,30 +1,13 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Addroute extends StatefulWidget {
+  const Addroute({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Transport Routes',
-      home: const TransportScreen(),
-    );
-  }
+  _AddrouteState createState() => _AddrouteState();
 }
 
-class TransportScreen extends StatefulWidget {
-  const TransportScreen({super.key});
-
-  @override
-  _TransportScreenState createState() => _TransportScreenState();
-}
-
-class _TransportScreenState extends State<TransportScreen> {
+class _AddrouteState extends State<Addroute> {
   String? selectedStartPlace;
   String? selectedEndPlace;
   String? busNumber;
