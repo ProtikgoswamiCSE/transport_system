@@ -19,7 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController transportIdController = TextEditingController();
   final TextEditingController bloodGroupController = TextEditingController();
 
-  void _submitForm() {
+  // ignore: unused_element
+  void _sub55mitForm() {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Login Successful!")),
