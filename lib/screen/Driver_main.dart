@@ -16,6 +16,8 @@ class DApp extends StatefulWidget {
 
 class _DAppState extends State<DApp> {
   int _selectedIndex = 0; // Track the selected tab
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); // Key to control the Scaffold
 
   // List of widget screens for each tab
   final List<Widget> _widgetOptions = <Widget>[
@@ -30,19 +32,104 @@ class _DAppState extends State<DApp> {
     });
   }
 
+  // Function to show a popup menu
+  void _showPopupMenu(BuildContext context) async {
+    final RenderBox overlay =
+        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Rect.fromPoints(
+          Offset(0, 0),
+          Offset(overlay.size.width, overlay.size.height),
+        ),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem<String>(
+          value: 'item1',
+          child: Text('Option 1'),
+        ),
+        PopupMenuItem<String>(
+          value: 'item2',
+          child: Text('Option 2'),
+        ),
+        PopupMenuItem<String>(
+          value: 'item3',
+          child: Text('Option 3'),
+        ),
+      ],
+      elevation: 8.0,
+    ).then((value) {
+      if (value != null) {
+        // Handle the selected value here
+        print("You selected: $value");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        key: _scaffoldKey, // Assign the scaffold key
         appBar: AppBar(
-          title: Text("Flutter UI"),
+          title: Text("Transport system"),
           leading: IconButton(
-            icon: Icon(Icons.more_vert), // 3-dot icon
+            icon: Icon(Icons.menu), // Menu icon for opening the drawer
             onPressed: () {
-              // Handle the menu button click
-              _showPopupMenu(context);
+              _scaffoldKey.currentState?.openDrawer(); // Open the drawer
             },
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(color: Colors.deepOrangeAccent),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, size: 40, color: Colors.blue),
+                    ),
+                    SizedBox(height: 10),
+                    Text("Protik",
+                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                    Text("goswami15-5841@diu.edu.bd",
+                        style: TextStyle(color: Colors.white70, fontSize: 14)),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text("Home"),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  // Navigate to Home if needed
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text("Settings"),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigate to Settings screen if needed
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text("Logout"),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Handle logout functionality here
+                },
+              ),
+            ],
           ),
         ),
         body: _widgetOptions
@@ -58,32 +145,6 @@ class _DAppState extends State<DApp> {
           ],
         ),
       ),
-    );
-  }
-
-  // Function to show a popup menu
-  void _showPopupMenu(BuildContext context) async {
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-    final Offset position = Offset(0, kToolbarHeight); // Position for the menu
-
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromRect(
-        position & Size(40, 40), // Adjust the size of the menu
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<String>(
-          value: 'Option1',
-          child: Text('Option 1'),
-        ),
-        PopupMenuItem<String>(
-          value: 'Option2',
-          child: Text('Option 2'),
-        ),
-      ],
-      elevation: 8.0,
     );
   }
 }
