@@ -9,8 +9,6 @@ void main() => runApp(
     );
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,11 +64,12 @@ class HomePage extends StatelessWidget {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(30),
                   child: Column(
-                    children: <Widget>[
+                    children: [
                       const SizedBox(height: 60),
                       FadeInUp(
                         duration: const Duration(milliseconds: 1400),
                         child: Container(
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
@@ -79,85 +78,10 @@ class HomePage extends StatelessWidget {
                                 color: Color.fromRGBO(225, 95, 27, .3),
                                 blurRadius: 20,
                                 offset: Offset(0, 10),
-                              )
-                            ],
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              // Email
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey.shade200,
-                                    ),
-                                  ),
-                                ),
-                                child: const TextField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration(
-                                    hintText: "Email or Phone number",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                              // Password
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey.shade200,
-                                    ),
-                                  ),
-                                ),
-                                child: const TextField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                              // Confirm Password
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey.shade200,
-                                    ),
-                                  ),
-                                ),
-                                child: const TextField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Confirm Password",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                              // 4-digit PIN
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                child: const TextField(
-                                  obscureText: true,
-                                  keyboardType: TextInputType.number,
-                                  maxLength: 4,
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    hintText: "4-digit PIN",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
                               ),
                             ],
                           ),
+                          ///////////////////////////////////////////////
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -199,7 +123,7 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 30),
                       Row(
-                        children: <Widget>[
+                        children: [
                           Expanded(
                             child: FadeInUp(
                               duration: const Duration(milliseconds: 1800),
@@ -213,14 +137,13 @@ class HomePage extends StatelessWidget {
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.train,
-                                        color: Colors.white, size: 30),
+                                    Icon(Icons.train, color: Colors.white),
                                     SizedBox(width: 8),
                                     Text(
                                       "Driver",
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 25,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -229,7 +152,7 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 30),
+                          const SizedBox(width: 20),
                           Expanded(
                             child: FadeInUp(
                               duration: const Duration(milliseconds: 1900),
@@ -243,14 +166,13 @@ class HomePage extends StatelessWidget {
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.people,
-                                        color: Colors.white, size: 30),
+                                    Icon(Icons.people, color: Colors.white),
                                     SizedBox(width: 8),
                                     Text(
                                       "User",
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 25,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -261,7 +183,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 30), // Extra padding for scroll
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
