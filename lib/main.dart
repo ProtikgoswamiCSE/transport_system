@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:transport_system/Bus_sudule.dart';
+import 'package:transport_system/screen/user/Bus_sudule.dart';
 // ignore: unused_import
-import 'package:transport_system/addroute.dart';
-import 'package:transport_system/login.dart';
+import 'package:transport_system/screen/user/addroute.dart';
+import 'package:transport_system/screen/user/login.dart';
 
 void main() {
   runApp(const MyApp());
