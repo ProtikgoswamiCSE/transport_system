@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class Navigation extends StatelessWidget {
+  const Navigation({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(child: Text("Home Page Content")),
     );
   }
 }

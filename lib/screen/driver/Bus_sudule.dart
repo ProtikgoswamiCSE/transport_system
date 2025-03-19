@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transport_system/screen/user/addroute.dart';
+import 'package:transport_system/screen/driver/addroute.dart';
 
 class DriTransportScreen extends StatefulWidget {
   const DriTransportScreen({super.key});
@@ -10,28 +10,23 @@ class DriTransportScreen extends StatefulWidget {
 
 class _TransportScreenState extends State<DriTransportScreen> {
   String? selectedPlace;
-  String? selectedTransport;
+  String? selectedEndPlace;
 
   final List<String> places = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
   final List<String> endPlace = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
 
   void _onSearch() {
-    if (selectedPlace != null && selectedTransport != null) {
-      print("Searching for $selectedTransport from $selectedPlace...");
+    if (selectedPlace != null && selectedEndPlace != null) {
+      print(
+          "Searching for transport from $selectedPlace to $selectedEndPlace...");
     } else {
-      print("Please select both Place and Transport Type.");
+      print("Please select both start and end places.");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favourite Routes',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -43,7 +38,7 @@ class _TransportScreenState extends State<DriTransportScreen> {
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     value: selectedPlace,
-                    hint: const Text("start Place"),
+                    hint: const Text("Start Place"),
                     items: places.map((String place) {
                       return DropdownMenuItem<String>(
                         value: place,
@@ -64,20 +59,20 @@ class _TransportScreenState extends State<DriTransportScreen> {
                 ),
                 const SizedBox(width: 8),
 
-                // Transport Type Dropdown
+                // End Place Dropdown
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: selectedTransport,
+                    value: selectedEndPlace,
                     hint: const Text("End Place"),
-                    items: endPlace.map((String transport) {
+                    items: endPlace.map((String place) {
                       return DropdownMenuItem<String>(
-                        value: transport,
-                        child: Text(transport),
+                        value: place,
+                        child: Text(place),
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedTransport = newValue;
+                        selectedEndPlace = newValue;
                       });
                     },
                     decoration: InputDecoration(
@@ -219,7 +214,7 @@ class TransportCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            //Price
+            // Price
             Text(
               "Price: $price",
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
