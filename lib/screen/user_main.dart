@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transport_system/screen/user/Bus_sudule.dart';
+import 'package:transport_system/screen/user/UrMapPage2.dart';
 
 import 'package:transport_system/screen/user/map.dart';
 
@@ -23,7 +24,7 @@ class _DAppState extends State<UApp> {
   final List<Widget> _widgetOptions = <Widget>[
     const UrMapPage(),
     const UrTransportScreen(),
-    const UrMapPage(),
+    const UrMapPage2(),
   ];
 
   void _onItemTapped(int index) {

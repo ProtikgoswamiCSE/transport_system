@@ -7,7 +7,7 @@ class UrMapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: const Center(
-        child: Text("Google Map will be displayed here"),
+        child: Text("Google will be displayed here"),
       ),
     );
   }
