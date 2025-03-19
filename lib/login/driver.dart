@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 void main() => runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
       ),
     );
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Driverlogin extends StatelessWidget {
+  const Driverlogin({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class HomePage extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 1000),
               child: const Text(
-                "Login",
+                "Driver Login",
                 style: TextStyle(color: Colors.white, fontSize: 40),
               ),
             ),
