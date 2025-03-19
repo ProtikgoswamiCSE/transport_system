@@ -32,42 +32,6 @@ class _DAppState extends State<DApp> {
     });
   }
 
-  // Function to show a popup menu
-  void _showPopupMenu(BuildContext context) async {
-    final RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromRect(
-        Rect.fromPoints(
-          Offset(0, 0),
-          Offset(overlay.size.width, overlay.size.height),
-        ),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<String>(
-          value: 'item1',
-          child: Text('Option 1'),
-        ),
-        PopupMenuItem<String>(
-          value: 'item2',
-          child: Text('Option 2'),
-        ),
-        PopupMenuItem<String>(
-          value: 'item3',
-          child: Text('Option 3'),
-        ),
-      ],
-      elevation: 8.0,
-    ).then((value) {
-      if (value != null) {
-        // Handle the selected value here
-        print("You selected: $value");
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
