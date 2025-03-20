@@ -37,7 +37,12 @@ class Driverlogin extends StatelessWidget {
       Expanded(
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
+            image: DecorationImage(
+              opacity: 0.7,
+              image: AssetImage('assets/images/oo2.png'),
+              fit: BoxFit.cover,
+              alignment: Alignment.topRight,
+            ),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(60),
               topRight: Radius.circular(60),
@@ -149,7 +154,7 @@ class Driverlogin extends StatelessWidget {
                             ),
                           ),
                           child: const TextField(
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               hintText: "                 ......Phone......",
                               hintStyle: TextStyle(color: Colors.grey),
@@ -160,7 +165,7 @@ class Driverlogin extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(8),
                           child: const TextField(
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               hintText: "             ......Blood group......",
                               hintStyle: TextStyle(color: Colors.grey),
@@ -177,7 +182,7 @@ class Driverlogin extends StatelessWidget {
                   duration: const Duration(milliseconds: 1500),
                   child: const Text(
                     "Forgot Password?",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Color.fromARGB(255, 20, 4, 247)),
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -208,8 +213,8 @@ class Driverlogin extends StatelessWidget {
                 FadeInUp(
                   duration: const Duration(milliseconds: 1700),
                   child: const Text(
-                    "Continue with social media",
-                    style: TextStyle(color: Colors.grey),
+                    "Select Uder / Driver",
+                    style: TextStyle(color: Color.fromARGB(255, 20, 4, 247)),
                   ),
                 ),
                 const SizedBox(height: 30),

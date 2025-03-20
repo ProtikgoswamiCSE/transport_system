@@ -37,7 +37,12 @@ class Userlogin extends StatelessWidget {
       Expanded(
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
+            image: DecorationImage(
+              opacity: 0.7,
+              image: AssetImage('assets/images/oo2.png'),
+              fit: BoxFit.cover,
+              alignment: Alignment.topRight,
+            ),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(60),
               topRight: Radius.circular(60),
