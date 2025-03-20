@@ -3,10 +3,6 @@ import 'package:transport_system/screen/driver/Bus_sudule.dart';
 import 'package:transport_system/screen/driver/DrMapPage2.dart';
 import 'package:transport_system/screen/driver/map.dart';
 
-void main() {
-  runApp(const DApp());
-}
-
 class DApp extends StatefulWidget {
   const DApp({super.key});
 
@@ -39,7 +35,7 @@ class _DAppState extends State<DApp> {
       home: Scaffold(
         key: _scaffoldKey, // Assign the scaffold key
         appBar: AppBar(
-          title: Text("Transport system"),
+          title: Text("D Transport system"),
           leading: IconButton(
             icon: Icon(Icons.menu), // Menu icon for opening the drawer
             onPressed: () {

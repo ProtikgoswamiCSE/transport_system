@@ -1,11 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-
-void main() => runApp(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-      ),
-    );
+import 'package:transport_system/login/user.dart';
+import 'package:transport_system/screen/Driver_main.dart';
 
 class Driverlogin extends StatelessWidget {
   const Driverlogin({super.key});
@@ -188,7 +184,10 @@ class Driverlogin extends StatelessWidget {
                 FadeInUp(
                   duration: const Duration(milliseconds: 1600),
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => DApp()));
+                    },
                     height: 50,
                     color: Colors.green[900],
                     shape: RoundedRectangleBorder(
@@ -220,7 +219,12 @@ class Driverlogin extends StatelessWidget {
                       child: FadeInUp(
                         duration: const Duration(milliseconds: 1800),
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Driverlogin()));
+                          },
                           height: 50,
                           color: Colors.lightGreen,
                           shape: RoundedRectangleBorder(
@@ -249,7 +253,12 @@ class Driverlogin extends StatelessWidget {
                       child: FadeInUp(
                         duration: const Duration(milliseconds: 1900),
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Userlogin()));
+                          },
                           height: 50,
                           color: Colors.lightGreen,
                           shape: RoundedRectangleBorder(
