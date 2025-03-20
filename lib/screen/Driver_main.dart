@@ -48,7 +48,15 @@ class _DAppState extends State<DApp> {
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.deepOrangeAccent),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(220, 32, 197, 32),
+                      Color.fromARGB(220, 23, 204, 47),
+                      Color.fromARGB(99, 8, 90, 12),
+                    ],
+                  ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -59,9 +67,13 @@ class _DAppState extends State<DApp> {
                     ),
                     SizedBox(height: 10),
                     Text("Protik",
-                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 22)),
                     Text("goswami15-5841@diu.edu.bd",
-                        style: TextStyle(color: Colors.white70, fontSize: 14)),
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 14)),
                   ],
                 ),
               ),
