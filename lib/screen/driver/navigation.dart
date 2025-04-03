@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
+import 'package:transport_system/login/log.dart';
 
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
@@ -47,7 +48,10 @@ class Navigation extends StatelessWidget {
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
               },
             ),
           ],
@@ -56,3 +60,4 @@ class Navigation extends StatelessWidget {
     );
   }
 }
+*/

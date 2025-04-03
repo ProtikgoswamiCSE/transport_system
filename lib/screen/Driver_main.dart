@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transport_system/login/log.dart';
 import 'package:transport_system/screen/driver/Bus_sudule.dart';
 import 'package:transport_system/screen/driver/DrMapPage2.dart';
 import 'package:transport_system/screen/driver/map.dart';
@@ -97,8 +98,11 @@ class _DAppState extends State<DApp> {
                 leading: Icon(Icons.logout),
                 title: Text("Logout"),
                 onTap: () {
-                  Navigator.pop(context);
-                  // Handle logout functionality here
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                  );
                 },
               ),
             ],
