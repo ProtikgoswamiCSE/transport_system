@@ -47,7 +47,7 @@ class _DProfileScreenState extends State<DProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

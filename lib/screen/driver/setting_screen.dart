@@ -19,7 +19,7 @@ class _DSettingsScreenState extends State<DSettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
