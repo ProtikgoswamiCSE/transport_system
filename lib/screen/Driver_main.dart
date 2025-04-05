@@ -3,6 +3,8 @@ import 'package:transport_system/login/log.dart';
 import 'package:transport_system/screen/driver/Bus_sudule.dart';
 import 'package:transport_system/screen/driver/DrMapPage2.dart';
 import 'package:transport_system/screen/driver/map.dart';
+import 'package:transport_system/screen/driver/profile_screen.dart';
+import 'package:transport_system/screen/driver/setting_screen.dart';
 
 class DApp extends StatefulWidget {
   const DApp({super.key});
@@ -37,6 +39,8 @@ class _DAppState extends State<DApp> {
         key: _scaffoldKey, // Assign the scaffold key
         appBar: AppBar(
           title: Text("D Transport system"),
+          backgroundColor: Colors.green,
+          foregroundColor: const Color.fromARGB(255, 255, 251, 251),
           leading: IconButton(
             icon: Icon(Icons.menu), // Menu icon for opening the drawer
             onPressed: () {
@@ -81,9 +85,19 @@ class _DAppState extends State<DApp> {
               ListTile(
                 leading: Icon(Icons.home),
                 title: Text("Home"),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('My Profile'),
                 onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                  // Navigate to Home if needed
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DProfileScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -91,7 +105,12 @@ class _DAppState extends State<DApp> {
                 title: Text("Settings"),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to Settings screen if needed
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DSettingsScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(

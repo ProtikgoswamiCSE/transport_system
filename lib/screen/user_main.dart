@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:transport_system/login/log.dart';
-import 'package:transport_system/screen/user/Bus_sudule.dart';
-import 'package:transport_system/screen/user/UrMapPage2.dart';
+import 'package:transport_system/screen/user/wized/Bus_sudule.dart';
+import 'package:transport_system/screen/user/wized/UrMapPage2.dart';
 
-import 'package:transport_system/screen/user/map.dart';
+import 'package:transport_system/screen/user/wized/map.dart';
+import 'package:transport_system/screen/user/profile_screen.dart';
+import 'package:transport_system/screen/user/setting_screen.dart';
 
 void main() {
   runApp(const UApp());
@@ -13,10 +15,10 @@ class UApp extends StatefulWidget {
   const UApp({super.key});
 
   @override
-  State<UApp> createState() => _DAppState();
+  State<UApp> createState() => _UAppState();
 }
 
-class _DAppState extends State<UApp> {
+class _UAppState extends State<UApp> {
   int _selectedIndex = 0; // Track the selected tab
   final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>(); // Key to control the Scaffold
@@ -42,6 +44,8 @@ class _DAppState extends State<UApp> {
         key: _scaffoldKey, // Assign the scaffold key
         appBar: AppBar(
           title: Text("Transport system"),
+          backgroundColor: Colors.green,
+          foregroundColor: const Color.fromARGB(255, 255, 251, 251),
           leading: IconButton(
             icon: Icon(Icons.menu), // Menu icon for opening the drawer
             onPressed: () {
@@ -92,11 +96,29 @@ class _DAppState extends State<UApp> {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('My Profile'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
                 leading: Icon(Icons.settings),
                 title: Text("Settings"),
                 onTap: () {
                   Navigator.pop(context);
-                  // Navigate to Settings screen if needed
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
