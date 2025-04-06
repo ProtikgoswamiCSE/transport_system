@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:transport_system/screen/Driver_main.dart';
+import 'package:transport_system/screen/user_main.dart';
+import 'package:transport_system/screen/user/profile_screen.dart';
 
 class DSettingsScreen extends StatefulWidget {
   const DSettingsScreen({super.key});
@@ -26,7 +27,7 @@ class _DSettingsScreenState extends State<DSettingsScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const DApp()),
+              MaterialPageRoute(builder: (context) => const UApp()),
             );
           },
         ),
@@ -38,7 +39,12 @@ class _DSettingsScreenState extends State<DSettingsScreen> {
             icon: Icons.person,
             title: 'Update Information',
             subtitle: 'Update your personal details',
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
           ),
           _buildSectionHeader('Preferences'),
           SwitchListTile(
