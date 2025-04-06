@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transport_system/screen/user_main.dart';
+import 'package:transport_system/screen/user/profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -38,7 +39,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.person,
             title: 'Update Information',
             subtitle: 'Update your personal details',
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
           ),
           _buildSectionHeader('Preferences'),
           SwitchListTile(

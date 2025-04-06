@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:transport_system/screen/user_main.dart';
+import 'package:provider/provider.dart';
+import 'package:transport_system/providers/profile_provider.dart';
+import 'package:transport_system/models/profile_model.dart';
 import 'dart:io';
+
+import 'package:transport_system/screen/user_main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,18 +18,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isEditing = false;
   File? _profileImage;
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController(text: '______ _______');
-  final _emailController =
-      TextEditingController(text: '_____________@diu.edu.bd');
-  final _phoneController = TextEditingController(text: '+880 1234 567890');
-  final _addressController =
-      TextEditingController(text: 'Daffodil Smart City, Ashulia');
-  final _studentIdController = TextEditingController(text: '221-15-5841');
-  final _departmentController = TextEditingController(text: 'CSE, DIU');
-  final _tripsController = TextEditingController(text: '0');
-  final _ratingController = TextEditingController(text: '4.8');
-  final _pointsController = TextEditingController(text: '0');
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _addressController;
+  late TextEditingController _bloodGroupController;
+  late TextEditingController _studentIdController;
+  late TextEditingController _departmentController;
+  late TextEditingController _tripsController;
+  late TextEditingController _ratingController;
+  late TextEditingController _pointsController;
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    final profile = context.read<ProfileProvider>().profile;
+    _nameController = TextEditingController(text: profile?.name);
+    _emailController = TextEditingController(text: profile?.email);
+    _phoneController = TextEditingController(text: profile?.phone);
+    _addressController = TextEditingController(text: profile?.address);
+    _bloodGroupController = TextEditingController(text: profile?.bloodGroup);
+    _studentIdController = TextEditingController(text: profile?.studentId);
+    _departmentController = TextEditingController(text: profile?.department);
+    _tripsController = TextEditingController(text: profile?.trips.toString());
+    _ratingController = TextEditingController(text: profile?.rating.toString());
+    _pointsController = TextEditingController(text: profile?.points.toString());
+  }
 
   @override
   void dispose() {
@@ -33,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
+    _bloodGroupController.dispose();
     _studentIdController.dispose();
     _departmentController.dispose();
     _tripsController.dispose();
@@ -41,19 +65,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  void _saveProfile() {
+    if (_formKey.currentState!.validate()) {
+      final newProfile = ProfileModel(
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+        bloodGroup: _bloodGroupController.text,
+        studentId: _studentIdController.text,
+        department: _departmentController.text,
+        profileImagePath: _profileImage?.path ?? '',
+        trips: int.parse(_tripsController.text),
+        rating: double.parse(_ratingController.text),
+        points: int.parse(_pointsController.text),
+      );
+
+      context.read<ProfileProvider>().updateProfile(newProfile);
+      setState(() {
+        _isEditing = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profile updated successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const UApp()),
+              MaterialPageRoute(builder: (context) => UApp()),
             );
           },
         ),
@@ -309,6 +362,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _isEditing,
                 ),
                 _buildEditableItem(
+                  Icons.bloodtype,
+                  'Blood Group',
+                  _bloodGroupController,
+                  _isEditing,
+                ),
+                _buildEditableItem(
                   Icons.location_on,
                   'Address',
                   _addressController,
@@ -373,17 +432,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _toggleEditMode() {
     if (_isEditing) {
-      if (_formKey.currentState!.validate()) {
-        setState(() {
-          _isEditing = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
+      _saveProfile();
     } else {
       setState(() {
         _isEditing = true;
