@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transport_system/screen/Driver_main.dart';
-import 'package:transport_system/screen/user/profile_screen.dart';
+import 'package:transport_system/screen/driver/profile_screen.dart';
 
 class DSettingsScreen extends StatefulWidget {
   const DSettingsScreen({super.key});
@@ -42,7 +42,7 @@ class _DSettingsScreenState extends State<DSettingsScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                MaterialPageRoute(builder: (context) => const DProfileScreen()),
               );
             },
           ),
