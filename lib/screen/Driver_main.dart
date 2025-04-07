@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transport_system/login/log.dart';
 import 'package:transport_system/screen/driver/Bus_sudule.dart';
 import 'package:transport_system/screen/driver/DrMapPage2.dart';
@@ -14,20 +15,40 @@ class DApp extends StatefulWidget {
 }
 
 class _DAppState extends State<DApp> {
-  int _selectedIndex = 0; // Track the selected tab
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // Key to control the Scaffold
+  int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _driverName = '';
+  String _driverPhone = '';
+  String _driverBloodGroup = '';
+  String _driverTransportId = '';
+  String _driverBusNo = '';
 
-  // List of widget screens for each tab
   final List<Widget> _widgetOptions = <Widget>[
     const DrMapPage(),
     const DriTransportScreen(),
     const DrMapPage2(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadDriverData();
+  }
+
+  Future<void> _loadDriverData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _driverName = prefs.getString('driver_name') ?? 'Driver';
+      _driverPhone = prefs.getString('driver_phone') ?? 'No phone number';
+      _driverBloodGroup = prefs.getString('driver_blood_group') ?? 'No blood group';
+      _driverTransportId = prefs.getString('driver_transport_id') ?? 'No transport ID';
+      _driverBusNo = prefs.getString('driver_bus_no') ?? 'No bus number';
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Update the selected index
+      _selectedIndex = index;
     });
   }
 
@@ -36,15 +57,15 @@ class _DAppState extends State<DApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        key: _scaffoldKey, // Assign the scaffold key
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text("D Transport system"),
           backgroundColor: Colors.green,
           foregroundColor: const Color.fromARGB(255, 255, 251, 251),
           leading: IconButton(
-            icon: Icon(Icons.menu), // Menu icon for opening the drawer
+            icon: Icon(Icons.menu),
             onPressed: () {
-              _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+              _scaffoldKey.currentState?.openDrawer();
             },
           ),
         ),
@@ -68,24 +89,39 @@ class _DAppState extends State<DApp> {
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 40, color: Colors.blue),
+                      child: Icon(Icons.person, size: 40, color: Colors.green),
                     ),
                     SizedBox(height: 10),
-                    Text("Protik",
+                    Text(_driverName,
                         style: TextStyle(
                             color: const Color.fromARGB(255, 0, 0, 0),
                             fontSize: 22)),
-                    Text("goswami15-5841@diu.edu.bd",
+                    Text(_driverPhone,
                         style: TextStyle(
                             color: const Color.fromARGB(179, 2, 1, 1),
                             fontSize: 14)),
+                    SizedBox(height: 5),
+                    Text('Blood Group: $_driverBloodGroup',
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 12)),
+                    Text('Transport ID: $_driverTransportId',
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 12)),
+                    Text('Bus No: $_driverBusNo',
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 12)),
                   ],
                 ),
               ),
               ListTile(
                 leading: Icon(Icons.home),
                 title: Text("Home"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.person),
@@ -97,7 +133,7 @@ class _DAppState extends State<DApp> {
                     MaterialPageRoute(
                       builder: (context) => const DProfileScreen(),
                     ),
-                  );
+                  ).then((_) => _loadDriverData()); // Reload data when returning from profile
                 },
               ),
               ListTile(
@@ -127,11 +163,10 @@ class _DAppState extends State<DApp> {
             ],
           ),
         ),
-        body: _widgetOptions
-            .elementAt(_selectedIndex), // Display the selected screen
+        body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex, // Set the current index
-          onTap: _onItemTapped, // Handle item taps
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
             BottomNavigationBarItem(

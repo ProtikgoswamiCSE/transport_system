@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transport_system/login/log.dart';
 import 'package:transport_system/screen/user/wized/Bus_sudule.dart';
 import 'package:transport_system/screen/user/wized/UrMapPage2.dart';
@@ -22,6 +23,11 @@ class _UAppState extends State<UApp> {
   int _selectedIndex = 0; // Track the selected tab
   final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>(); // Key to control the Scaffold
+  String _userName = '';
+  String _userPhone = '';
+  String _userBloodGroup = '';
+  String _userStudentId = '';
+  String _userDepartment = '';
 
   // List of widget screens for each tab
   final List<Widget> _widgetOptions = <Widget>[
@@ -29,6 +35,23 @@ class _UAppState extends State<UApp> {
     const UrTransportScreen(),
     const UrMapPage2(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userName = prefs.getString('user_name') ?? 'User';
+      _userPhone = prefs.getString('user_phone') ?? 'No phone number';
+      _userBloodGroup = prefs.getString('user_blood_group') ?? 'No blood group';
+      _userStudentId = prefs.getString('user_student_id') ?? 'No student ID';
+      _userDepartment = prefs.getString('user_department') ?? 'No department';
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -73,17 +96,30 @@ class _UAppState extends State<UApp> {
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 40, color: Colors.blue),
+                      child: Icon(Icons.person, size: 40, color: Colors.green),
                     ),
                     SizedBox(height: 10),
-                    Text("Protik",
+                    Text(_userName,
                         style: TextStyle(
                             color: const Color.fromARGB(255, 0, 0, 0),
                             fontSize: 22)),
-                    Text("goswami15-5841@diu.edu.bd",
+                    Text(_userPhone,
                         style: TextStyle(
                             color: const Color.fromARGB(179, 2, 1, 1),
                             fontSize: 14)),
+                    SizedBox(height: 5),
+                    Text('Blood Group: $_userBloodGroup',
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 12)),
+                    Text('Student ID: $_userStudentId',
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 12)),
+                    Text('Department: $_userDepartment',
+                        style: TextStyle(
+                            color: const Color.fromARGB(179, 2, 1, 1),
+                            fontSize: 12)),
                   ],
                 ),
               ),
@@ -105,7 +141,7 @@ class _UAppState extends State<UApp> {
                     MaterialPageRoute(
                       builder: (context) => const ProfileScreen(),
                     ),
-                  );
+                  ).then((_) => _loadUserData()); // Reload data when returning from profile
                 },
               ),
               ListTile(
