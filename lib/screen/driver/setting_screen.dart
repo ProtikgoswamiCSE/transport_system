@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transport_system/screen/user_main.dart';
+import 'package:transport_system/screen/Driver_main.dart';
 import 'package:transport_system/screen/user/profile_screen.dart';
 
 class DSettingsScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _DSettingsScreenState extends State<DSettingsScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const UApp()),
+              MaterialPageRoute(builder: (context) => const DApp()),
             );
           },
         ),
