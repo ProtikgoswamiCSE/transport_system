@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:transport_system/providers/profile_provider.dart';
 import 'package:transport_system/models/profile_model.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:transport_system/screen/user_main.dart';
 
@@ -23,8 +24,8 @@ class _DProfileScreenState extends State<DProfileScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
   late TextEditingController _bloodGroupController;
-  late TextEditingController _studentIdController;
-  late TextEditingController _departmentController;
+  late TextEditingController _transportIdController;
+  late TextEditingController _busNoController;
   late TextEditingController _tripsController;
   late TextEditingController _ratingController;
   late TextEditingController _pointsController;
@@ -34,6 +35,24 @@ class _DProfileScreenState extends State<DProfileScreen> {
   void initState() {
     super.initState();
     _initializeControllers();
+    _loadLoginData();
+  }
+
+  Future<void> _loadLoginData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString('driver_name') ?? '';
+    final phone = prefs.getString('driver_phone') ?? '';
+    final bloodGroup = prefs.getString('driver_blood_group') ?? '';
+    final transportId = prefs.getString('driver_transport_id') ?? '';
+    final busNo = prefs.getString('driver_bus_no') ?? '';
+
+    setState(() {
+      _nameController.text = name;
+      _phoneController.text = phone;
+      _bloodGroupController.text = bloodGroup;
+      _transportIdController.text = transportId;
+      _busNoController.text = busNo;
+    });
   }
 
   void _initializeControllers() {
@@ -43,8 +62,8 @@ class _DProfileScreenState extends State<DProfileScreen> {
     _phoneController = TextEditingController(text: profile?.phone);
     _addressController = TextEditingController(text: profile?.address);
     _bloodGroupController = TextEditingController(text: profile?.bloodGroup);
-    _studentIdController = TextEditingController(text: profile?.studentId);
-    _departmentController = TextEditingController(text: profile?.department);
+    _transportIdController = TextEditingController();
+    _busNoController = TextEditingController();
     _tripsController = TextEditingController(text: profile?.trips.toString());
     _ratingController = TextEditingController(text: profile?.rating.toString());
     _pointsController = TextEditingController(text: profile?.points.toString());
@@ -57,24 +76,31 @@ class _DProfileScreenState extends State<DProfileScreen> {
     _phoneController.dispose();
     _addressController.dispose();
     _bloodGroupController.dispose();
-    _studentIdController.dispose();
-    _departmentController.dispose();
+    _transportIdController.dispose();
+    _busNoController.dispose();
     _tripsController.dispose();
     _ratingController.dispose();
     _pointsController.dispose();
     super.dispose();
   }
 
-  void _saveProfile() {
+  Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('driver_name', _nameController.text);
+      await prefs.setString('driver_phone', _phoneController.text);
+      await prefs.setString('driver_blood_group', _bloodGroupController.text);
+      await prefs.setString('driver_transport_id', _transportIdController.text);
+      await prefs.setString('driver_bus_no', _busNoController.text);
+
       final newProfile = ProfileModel(
         name: _nameController.text,
         email: _emailController.text,
         phone: _phoneController.text,
         address: _addressController.text,
         bloodGroup: _bloodGroupController.text,
-        studentId: _studentIdController.text,
-        department: _departmentController.text,
+        studentId: _transportIdController.text,
+        department: _busNoController.text,
         profileImagePath: _profileImage?.path ?? '',
         trips: int.parse(_tripsController.text),
         rating: double.parse(_ratingController.text),
@@ -350,12 +376,6 @@ class _DProfileScreenState extends State<DProfileScreen> {
                   _isEditing,
                 ),
                 _buildEditableItem(
-                  Icons.email,
-                  'Email',
-                  _emailController,
-                  _isEditing,
-                ),
-                _buildEditableItem(
                   Icons.phone,
                   'Phone Number',
                   _phoneController,
@@ -368,21 +388,21 @@ class _DProfileScreenState extends State<DProfileScreen> {
                   _isEditing,
                 ),
                 _buildEditableItem(
+                  Icons.badge,
+                  'Transport ID',
+                  _transportIdController,
+                  _isEditing,
+                ),
+                _buildEditableItem(
+                  Icons.directions_bus,
+                  'Bus Number',
+                  _busNoController,
+                  _isEditing,
+                ),
+                _buildEditableItem(
                   Icons.location_on,
                   'Address',
                   _addressController,
-                  _isEditing,
-                ),
-                _buildEditableItem(
-                  Icons.badge,
-                  'Student ID',
-                  _studentIdController,
-                  _isEditing,
-                ),
-                _buildEditableItem(
-                  Icons.school,
-                  'Department',
-                  _departmentController,
                   _isEditing,
                 ),
               ],

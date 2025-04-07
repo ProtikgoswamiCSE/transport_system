@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:transport_system/providers/profile_provider.dart';
 import 'package:transport_system/models/profile_model.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transport_system/login/log.dart';
 
 import 'package:transport_system/screen/user_main.dart';
 
@@ -34,6 +36,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _initializeControllers();
+    _loadLoginData();
+  }
+
+  Future<void> _loadLoginData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString('user_name') ?? '';
+    final phone = prefs.getString('user_phone') ?? '';
+    final bloodGroup = prefs.getString('user_blood_group') ?? '';
+
+    setState(() {
+      _nameController.text = name;
+      _phoneController.text = phone;
+      _bloodGroupController.text = bloodGroup;
+    });
   }
 
   void _initializeControllers() {
@@ -65,8 +81,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  void _saveProfile() {
+  Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_name', _nameController.text);
+      await prefs.setString('user_phone', _phoneController.text);
+      await prefs.setString('user_blood_group', _bloodGroupController.text);
+
       final newProfile = ProfileModel(
         name: _nameController.text,
         email: _emailController.text,
@@ -368,12 +389,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _isEditing,
                 ),
                 _buildEditableItem(
-                  Icons.location_on,
-                  'Address',
-                  _addressController,
-                  _isEditing,
-                ),
-                _buildEditableItem(
                   Icons.badge,
                   'Student ID',
                   _studentIdController,
@@ -383,6 +398,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Icons.school,
                   'Department',
                   _departmentController,
+                  _isEditing,
+                ),
+                _buildEditableItem(
+                  Icons.location_on,
+                  'Address',
+                  _addressController,
                   _isEditing,
                 ),
               ],

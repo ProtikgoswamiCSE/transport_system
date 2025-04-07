@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:transport_system/screen/user_main.dart';
 import 'package:transport_system/screen/Driver_main.dart';
@@ -74,15 +75,30 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      if (!mounted) return;
-
+      final prefs = await SharedPreferences.getInstance();
+      
       if (_isDriverLogin) {
+        // Save driver data
+        await prefs.setString('driver_name', _nameController.text);
+        await prefs.setString('driver_phone', _phoneController.text);
+        await prefs.setString('driver_blood_group', _bloodGroupController.text);
+        await prefs.setString('driver_transport_id', _transportIdController.text);
+        await prefs.setString('driver_bus_no', _busNoController.text);
+        await prefs.setBool('is_driver', true);
+        
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const DApp()),
         );
       } else {
+        // Save user data
+        await prefs.setString('user_name', _nameController.text);
+        await prefs.setString('user_phone', _phoneController.text);
+        await prefs.setString('user_blood_group', _bloodGroupController.text);
+        await prefs.setBool('is_driver', false);
+        
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const UApp()),
