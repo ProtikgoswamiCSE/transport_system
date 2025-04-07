@@ -7,6 +7,7 @@ import 'package:transport_system/screen/user/wized/UrMapPage2.dart';
 import 'package:transport_system/screen/user/wized/map.dart';
 import 'package:transport_system/screen/user/profile_screen.dart';
 import 'package:transport_system/screen/user/setting_screen.dart';
+import 'dart:io';
 
 void main() {
   runApp(const UApp());
@@ -25,10 +26,7 @@ class _UAppState extends State<UApp> {
       GlobalKey<ScaffoldState>(); // Key to control the Scaffold
   String _userName = '';
   String _userPhone = '';
-  String _userBloodGroup = '';
-  String _userStudentId = '';
-  String _userDepartment = '';
-
+  String? _profileImagePath;
   // List of widget screens for each tab
   final List<Widget> _widgetOptions = <Widget>[
     const UrMapPage(),
@@ -47,9 +45,7 @@ class _UAppState extends State<UApp> {
     setState(() {
       _userName = prefs.getString('user_name') ?? 'User';
       _userPhone = prefs.getString('user_phone') ?? 'No phone number';
-      _userBloodGroup = prefs.getString('user_blood_group') ?? 'No blood group';
-      _userStudentId = prefs.getString('user_student_id') ?? 'No student ID';
-      _userDepartment = prefs.getString('user_department') ?? 'No department';
+      _profileImagePath = prefs.getString('user_profile_image');
     });
   }
 
@@ -81,45 +77,52 @@ class _UAppState extends State<UApp> {
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                margin: EdgeInsets.zero,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                     colors: [
-                      Color.fromARGB(220, 32, 197, 32),
-                      Color.fromARGB(220, 23, 204, 47),
-                      Color.fromARGB(99, 8, 90, 12),
+                      Color.fromARGB(255, 32, 197, 32),
+                      Color.fromARGB(255, 23, 204, 47),
+                      Color.fromARGB(255, 8, 90, 12),
                     ],
+                    stops: [0.0, 0.5, 1.0],
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 30,
+                      radius: 35,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 40, color: Colors.green),
+                      backgroundImage: _profileImagePath != null
+                          ? FileImage(File(_profileImagePath!)) as ImageProvider
+                          : null,
+                      child: _profileImagePath == null
+                          ? Icon(Icons.person, size: 45, color: Colors.green)
+                          : null,
                     ),
-                    SizedBox(height: 10),
-                    Text(_userName,
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 22)),
-                    Text(_userPhone,
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 14)),
-                    SizedBox(height: 5),
-                    Text('Blood Group: $_userBloodGroup',
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 12)),
-                    Text('Student ID: $_userStudentId',
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 12)),
-                    Text('Department: $_userDepartment',
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 12)),
+                    SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      child: Text(_userName,
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Text(_userPhone,
+                          style: TextStyle(
+                              color: const Color.fromARGB(179, 2, 1, 1),
+                              fontSize: 14),
+                          overflow: TextOverflow.ellipsis),
+                    ),
                   ],
                 ),
               ),
@@ -141,7 +144,8 @@ class _UAppState extends State<UApp> {
                     MaterialPageRoute(
                       builder: (context) => const ProfileScreen(),
                     ),
-                  ).then((_) => _loadUserData()); // Reload data when returning from profile
+                  ).then((_) =>
+                      _loadUserData()); // Reload data when returning from profile
                 },
               ),
               ListTile(

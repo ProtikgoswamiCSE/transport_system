@@ -76,16 +76,17 @@ class _LoginScreenState extends State<LoginScreen>
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       if (_isDriverLogin) {
         // Save driver data
         await prefs.setString('driver_name', _nameController.text);
         await prefs.setString('driver_phone', _phoneController.text);
         await prefs.setString('driver_blood_group', _bloodGroupController.text);
-        await prefs.setString('driver_transport_id', _transportIdController.text);
+        await prefs.setString(
+            'driver_transport_id', _transportIdController.text);
         await prefs.setString('driver_bus_no', _busNoController.text);
         await prefs.setBool('is_driver', true);
-        
+
         if (!mounted) return;
         Navigator.pushReplacement(
           context,
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen>
         await prefs.setString('user_phone', _phoneController.text);
         await prefs.setString('user_blood_group', _bloodGroupController.text);
         await prefs.setBool('is_driver', false);
-        
+
         if (!mounted) return;
         Navigator.pushReplacement(
           context,

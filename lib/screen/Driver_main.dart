@@ -6,6 +6,7 @@ import 'package:transport_system/screen/driver/DrMapPage2.dart';
 import 'package:transport_system/screen/driver/map.dart';
 import 'package:transport_system/screen/driver/profile_screen.dart';
 import 'package:transport_system/screen/driver/setting_screen.dart';
+import 'dart:io';
 
 class DApp extends StatefulWidget {
   const DApp({super.key});
@@ -15,14 +16,14 @@ class DApp extends StatefulWidget {
 }
 
 class _DAppState extends State<DApp> {
-  int _selectedIndex = 0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _selectedIndex = 0; // Track the selected tab
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); // Key to control the Scaffold
   String _driverName = '';
   String _driverPhone = '';
-  String _driverBloodGroup = '';
-  String _driverTransportId = '';
-  String _driverBusNo = '';
+  String? _profileImagePath;
 
+  // List of widget screens for each tab
   final List<Widget> _widgetOptions = <Widget>[
     const DrMapPage(),
     const DriTransportScreen(),
@@ -40,15 +41,13 @@ class _DAppState extends State<DApp> {
     setState(() {
       _driverName = prefs.getString('driver_name') ?? 'Driver';
       _driverPhone = prefs.getString('driver_phone') ?? 'No phone number';
-      _driverBloodGroup = prefs.getString('driver_blood_group') ?? 'No blood group';
-      _driverTransportId = prefs.getString('driver_transport_id') ?? 'No transport ID';
-      _driverBusNo = prefs.getString('driver_bus_no') ?? 'No bus number';
+      _profileImagePath = prefs.getString('driver_profile_image');
     });
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _selectedIndex = index; // Update the selected index
     });
   }
 
@@ -57,15 +56,15 @@ class _DAppState extends State<DApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        key: _scaffoldKey,
+        key: _scaffoldKey, // Assign the scaffold key
         appBar: AppBar(
           title: Text("D Transport system"),
           backgroundColor: Colors.green,
           foregroundColor: const Color.fromARGB(255, 255, 251, 251),
           leading: IconButton(
-            icon: Icon(Icons.menu),
+            icon: Icon(Icons.menu), // Menu icon for opening the drawer
             onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
+              _scaffoldKey.currentState?.openDrawer(); // Open the drawer
             },
           ),
         ),
@@ -74,45 +73,52 @@ class _DAppState extends State<DApp> {
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                margin: EdgeInsets.zero,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                     colors: [
-                      Color.fromARGB(220, 32, 197, 32),
-                      Color.fromARGB(220, 23, 204, 47),
-                      Color.fromARGB(99, 8, 90, 12),
+                      Color.fromARGB(255, 32, 197, 32),
+                      Color.fromARGB(255, 23, 204, 47),
+                      Color.fromARGB(255, 8, 90, 12),
                     ],
+                    stops: [0.0, 0.5, 1.0],
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 30,
+                      radius: 35,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 40, color: Colors.green),
+                      backgroundImage: _profileImagePath != null
+                          ? FileImage(File(_profileImagePath!)) as ImageProvider
+                          : null,
+                      child: _profileImagePath == null
+                          ? Icon(Icons.person, size: 45, color: Colors.blue)
+                          : null,
                     ),
-                    SizedBox(height: 10),
-                    Text(_driverName,
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 22)),
-                    Text(_driverPhone,
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 14)),
-                    SizedBox(height: 5),
-                    Text('Blood Group: $_driverBloodGroup',
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 12)),
-                    Text('Transport ID: $_driverTransportId',
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 12)),
-                    Text('Bus No: $_driverBusNo',
-                        style: TextStyle(
-                            color: const Color.fromARGB(179, 2, 1, 1),
-                            fontSize: 12)),
+                    SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      child: Text(_driverName,
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Text(_driverPhone,
+                          style: TextStyle(
+                              color: const Color.fromARGB(179, 2, 1, 1),
+                              fontSize: 14),
+                          overflow: TextOverflow.ellipsis),
+                    ),
                   ],
                 ),
               ),
@@ -163,10 +169,11 @@ class _DAppState extends State<DApp> {
             ],
           ),
         ),
-        body: _widgetOptions.elementAt(_selectedIndex),
+        body: _widgetOptions
+            .elementAt(_selectedIndex), // Display the selected screen
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
+          currentIndex: _selectedIndex, // Set the current index
+          onTap: _onItemTapped, // Handle item taps
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
             BottomNavigationBarItem(

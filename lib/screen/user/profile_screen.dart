@@ -5,7 +5,6 @@ import 'package:transport_system/providers/profile_provider.dart';
 import 'package:transport_system/models/profile_model.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transport_system/login/log.dart';
 
 import 'package:transport_system/screen/user_main.dart';
 
@@ -37,6 +36,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _initializeControllers();
     _loadLoginData();
+    _loadProfileImage();
+  }
+
+  Future<void> _loadProfileImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('user_profile_image');
+    if (imagePath != null && imagePath.isNotEmpty) {
+      setState(() {
+        _profileImage = File(imagePath);
+      });
+    }
   }
 
   Future<void> _loadLoginData() async {
@@ -44,11 +54,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final name = prefs.getString('user_name') ?? '';
     final phone = prefs.getString('user_phone') ?? '';
     final bloodGroup = prefs.getString('user_blood_group') ?? '';
+    final studentId = prefs.getString('user_student_id') ?? '';
+    final department = prefs.getString('user_department') ?? '';
+    final email = prefs.getString('user_email') ?? '';
+    final address = prefs.getString('user_address') ?? '';
+    final trips = prefs.getInt('user_trips') ?? 0;
+    final rating = prefs.getDouble('user_rating') ?? 0.0;
+    final points = prefs.getInt('user_points') ?? 0;
 
     setState(() {
       _nameController.text = name;
       _phoneController.text = phone;
       _bloodGroupController.text = bloodGroup;
+      _studentIdController.text = studentId;
+      _departmentController.text = department;
+      _emailController.text = email;
+      _addressController.text = address;
+      _tripsController.text = trips.toString();
+      _ratingController.text = rating.toString();
+      _pointsController.text = points.toString();
     });
   }
 
@@ -87,6 +111,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await prefs.setString('user_name', _nameController.text);
       await prefs.setString('user_phone', _phoneController.text);
       await prefs.setString('user_blood_group', _bloodGroupController.text);
+      await prefs.setString('user_student_id', _studentIdController.text);
+      await prefs.setString('user_department', _departmentController.text);
+
+      // Save profile image path if it exists
+      if (_profileImage != null) {
+        await prefs.setString('user_profile_image', _profileImage!.path);
+      }
 
       final newProfile = ProfileModel(
         name: _nameController.text,
@@ -502,6 +533,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _profileImage = File(image.path);
       });
+      // Save the image path to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_profile_image', image.path);
     }
   }
 }

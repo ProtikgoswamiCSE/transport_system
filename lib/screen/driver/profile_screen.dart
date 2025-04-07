@@ -5,8 +5,7 @@ import 'package:transport_system/providers/profile_provider.dart';
 import 'package:transport_system/models/profile_model.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:transport_system/screen/user_main.dart';
+import 'package:transport_system/screen/Driver_main.dart';
 
 class DProfileScreen extends StatefulWidget {
   const DProfileScreen({super.key});
@@ -36,6 +35,17 @@ class _DProfileScreenState extends State<DProfileScreen> {
     super.initState();
     _initializeControllers();
     _loadLoginData();
+    _loadProfileImage();
+  }
+
+  Future<void> _loadProfileImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('driver_profile_image');
+    if (imagePath != null && imagePath.isNotEmpty) {
+      setState(() {
+        _profileImage = File(imagePath);
+      });
+    }
   }
 
   Future<void> _loadLoginData() async {
@@ -45,6 +55,11 @@ class _DProfileScreenState extends State<DProfileScreen> {
     final bloodGroup = prefs.getString('driver_blood_group') ?? '';
     final transportId = prefs.getString('driver_transport_id') ?? '';
     final busNo = prefs.getString('driver_bus_no') ?? '';
+    final email = prefs.getString('driver_email') ?? '';
+    final address = prefs.getString('driver_address') ?? '';
+    final trips = prefs.getInt('driver_trips') ?? 0;
+    final rating = prefs.getDouble('driver_rating') ?? 0.0;
+    final points = prefs.getInt('driver_points') ?? 0;
 
     setState(() {
       _nameController.text = name;
@@ -52,6 +67,11 @@ class _DProfileScreenState extends State<DProfileScreen> {
       _bloodGroupController.text = bloodGroup;
       _transportIdController.text = transportId;
       _busNoController.text = busNo;
+      _emailController.text = email;
+      _addressController.text = address;
+      _tripsController.text = trips.toString();
+      _ratingController.text = rating.toString();
+      _pointsController.text = points.toString();
     });
   }
 
@@ -93,6 +113,11 @@ class _DProfileScreenState extends State<DProfileScreen> {
       await prefs.setString('driver_transport_id', _transportIdController.text);
       await prefs.setString('driver_bus_no', _busNoController.text);
 
+      // Save profile image path if it exists
+      if (_profileImage != null) {
+        await prefs.setString('driver_profile_image', _profileImage!.path);
+      }
+
       final newProfile = ProfileModel(
         name: _nameController.text,
         email: _emailController.text,
@@ -132,7 +157,7 @@ class _DProfileScreenState extends State<DProfileScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => UApp()),
+              MaterialPageRoute(builder: (context) => DApp()),
             );
           },
         ),
@@ -501,6 +526,9 @@ class _DProfileScreenState extends State<DProfileScreen> {
       setState(() {
         _profileImage = File(image.path);
       });
+      // Save the image path to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('driver_profile_image', image.path);
     }
   }
 }
