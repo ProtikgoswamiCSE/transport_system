@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transport_system/login/log.dart';
 import 'package:transport_system/screen/user/wized/Bus_sudule.dart';
+import 'package:transport_system/screen/user/wized/MAP1.dart';
 import 'package:transport_system/screen/user/wized/UrMapPage2.dart';
-
-import 'package:transport_system/screen/user/wized/map.dart';
 import 'package:transport_system/screen/user/profile_screen.dart';
 import 'package:transport_system/screen/user/setting_screen.dart';
 import 'dart:io';
