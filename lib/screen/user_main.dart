@@ -106,7 +106,7 @@ class _UAppState extends State<UApp> {
                           : null,
                     ),
                     SizedBox(height: 12),
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Text(_userName,
                           style: TextStyle(
@@ -115,7 +115,7 @@ class _UAppState extends State<UApp> {
                               fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis),
                     ),
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Text(_userPhone,
                           style: TextStyle(

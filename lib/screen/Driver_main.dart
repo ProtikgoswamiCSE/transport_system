@@ -102,7 +102,7 @@ class _DAppState extends State<DApp> {
                           : null,
                     ),
                     SizedBox(height: 12),
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Text(_driverName,
                           style: TextStyle(
@@ -111,7 +111,7 @@ class _DAppState extends State<DApp> {
                               fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis),
                     ),
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Text(_driverPhone,
                           style: TextStyle(
