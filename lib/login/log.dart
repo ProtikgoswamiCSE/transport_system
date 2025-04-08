@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -456,7 +453,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                           const SizedBox(height: 16),
                           const Text(
-                            'Developed by: Protik goswami',
+                            'Developed by: Group DIU',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
