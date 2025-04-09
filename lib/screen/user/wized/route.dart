@@ -16,6 +16,9 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
   final MapController _mapController = MapController();
   final Location _location = Location();
   LatLng? _currentLocation;
+  final TextEditingController _startPointController = TextEditingController();
+  final TextEditingController _destinationController = TextEditingController();
+  final LatLng dhakaLocation = LatLng(23.8103, 90.4125);
 
   Stream<LocationMarkerPosition> get _locationStream =>
       _location.onLocationChanged.map((locationData) => LocationMarkerPosition(
@@ -60,9 +63,11 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
 
   Future<void> jumptoCurrentLocation() async {
     if (_currentLocation != null) {
-      _mapController.move(_currentLocation!, 10);
+      _mapController.move(_currentLocation!, 15);
     } else {
-      errorMessage('Current location not available.');
+      errorMessage(
+          'Please enable location services to see your current location.');
+      await _initializeLocation();
     }
   }
 
@@ -80,8 +85,8 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: _currentLocation ?? const LatLng(23.6850, 90.3563),
-              initialZoom: 3,
+              initialCenter: dhakaLocation,
+              initialZoom: 12,
               minZoom: 0,
               maxZoom: 100,
             ),
@@ -89,6 +94,21 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.transport_system',
+              ),
+              MarkerLayer(
+                markers: [
+                  if (_currentLocation != null)
+                    Marker(
+                      point: _currentLocation!,
+                      width: 40,
+                      height: 40,
+                      child: Icon(
+                        Icons.my_location,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
+                    ),
+                ],
               ),
               CurrentLocationLayer(
                 positionStream: _locationStream,
@@ -102,7 +122,84 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
                 ),
               ),
             ],
-          )
+          ),
+          // Search inputs
+          Positioned(
+            top: 40,
+            left: 16,
+            right: 16,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined,
+                          color: Colors.grey),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          controller: _startPointController,
+                          decoration: const InputDecoration(
+                            hintText:
+                                'Choose starting point, or click on the map',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          controller: _destinationController,
+                          decoration: const InputDecoration(
+                            hintText: 'Choose destination...',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -121,5 +218,12 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
         child: const Icon(Icons.my_location),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _startPointController.dispose();
+    _destinationController.dispose();
+    super.dispose();
   }
 }
