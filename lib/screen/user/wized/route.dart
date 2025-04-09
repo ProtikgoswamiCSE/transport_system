@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -26,92 +27,19 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
   List<Map<String, dynamic>> searchResults = [];
   bool isSearching = false;
 
-  void errorMessage(String s) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(s),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  Future<void> getRoute() async {
-    if (startPoint == null || endPoint == null) {
-      errorMessage('Please select both start and destination points');
-      return;
-    }
-
-    final String url =
-        'http://router.project-osrm.org/route/v1/driving/${startPoint!.longitude},${startPoint!.latitude};${endPoint!.longitude},${endPoint!.latitude}?overview=full&geometries=geojson';
-
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List<dynamic> coordinates =
-            data['routes'][0]['geometry']['coordinates'];
-
-        setState(() {
-          routePoints = coordinates
-              .map((point) => LatLng(point[1].toDouble(), point[0].toDouble()))
-              .toList();
-        });
-
+  void drawDirectRoute() {
+    if (startPoint != null && endPoint != null) {
+      setState(() {
+        routePoints = [startPoint!, endPoint!];
         // Fit map bounds to show the entire route
         final bounds = LatLngBounds.fromPoints(routePoints);
+        // ignore: deprecated_member_use
         _mapController.fitBounds(
           bounds,
+          // ignore: deprecated_member_use
           options: const FitBoundsOptions(padding: EdgeInsets.all(50.0)),
         );
-      }
-    } catch (e) {
-      errorMessage('Error getting route: $e');
-    }
-  }
-
-  Future<bool> _checkRequestPermission() async {
-    bool serviceEnabled = await _location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) return false;
-    }
-    PermissionStatus permissionStatus = await _location.hasPermission();
-    if (permissionStatus == PermissionStatus.denied) {
-      permissionStatus = await _location.requestPermission();
-    }
-    return permissionStatus == PermissionStatus.granted;
-  }
-
-  Future<void> _initializeLocation() async {
-    if (!await _checkRequestPermission()) return;
-    _location.onLocationChanged.listen((LocationData currentLocation) {
-      if (mounted) {
-        setState(() {
-          _currentLocation =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        });
-      }
-    });
-  }
-
-  Future<void> jumptoCurrentLocation() async {
-    if (_currentLocation != null) {
-      _mapController.move(_currentLocation!, 15);
-    } else {
-      errorMessage(
-          'Please enable location services to see your current location.');
-      await _initializeLocation();
-    }
-  }
-
-  void _useCurrentLocationAsStart() {
-    if (_currentLocation != null) {
-      setState(() {
-        startPoint = _currentLocation;
-        _startPointController.text = 'Current Location';
       });
-    } else {
-      errorMessage('Current location not available');
     }
   }
 
@@ -162,10 +90,62 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
       endPoint = LatLng(result['lat'], result['lon']);
       _destinationController.text = result['display_name'];
       searchResults = [];
-      if (startPoint != null) {
-        getRoute();
+    });
+  }
+
+  void errorMessage(String s) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(s),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<bool> _checkRequestPermission() async {
+    bool serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) return false;
+    }
+    PermissionStatus permissionStatus = await _location.hasPermission();
+    if (permissionStatus == PermissionStatus.denied) {
+      permissionStatus = await _location.requestPermission();
+    }
+    return permissionStatus == PermissionStatus.granted;
+  }
+
+  Future<void> _initializeLocation() async {
+    if (!await _checkRequestPermission()) return;
+    _location.onLocationChanged.listen((LocationData currentLocation) {
+      if (mounted) {
+        setState(() {
+          _currentLocation =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        });
       }
     });
+  }
+
+  Future<void> jumptoCurrentLocation() async {
+    if (_currentLocation != null) {
+      _mapController.move(_currentLocation!, 15);
+    } else {
+      errorMessage(
+          'Please enable location services to see your current location.');
+      await _initializeLocation();
+    }
+  }
+
+  void _useCurrentLocationAsStart() {
+    if (_currentLocation != null) {
+      setState(() {
+        startPoint = _currentLocation;
+        _startPointController.text = 'Current Location';
+      });
+    } else {
+      errorMessage('Current location not available');
+    }
   }
 
   @override
@@ -205,8 +185,8 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
                   polylines: [
                     Polyline(
                       points: routePoints,
-                      color: Colors.blue,
-                      strokeWidth: 4.0,
+                      color: Colors.yellow,
+                      strokeWidth: 5.0,
                     ),
                   ],
                 ),
@@ -249,7 +229,6 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
               ),
             ],
           ),
-          // Search inputs
           Positioned(
             top: 40,
             left: 16,
@@ -275,7 +254,7 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
                     children: [
                       const Icon(Icons.location_on_outlined,
                           color: Colors.grey),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4),
                       Expanded(
                         child: TextField(
                           controller: _startPointController,
@@ -283,7 +262,7 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
                             hintText:
                                 'Choose starting point, or click on the map',
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            contentPadding: EdgeInsets.symmetric(vertical: 0.5),
                           ),
                           readOnly: true,
                         ),
@@ -375,27 +354,56 @@ class _LiveTrackingPageState extends State<UrMapPage2> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    if (startPoint != null && endPoint != null) {
-                      getRoute();
-                    } else {
-                      errorMessage(
-                          'Please select both start and destination points');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (startPoint != null && endPoint != null) {
+                            drawDirectRoute();
+                          } else {
+                            errorMessage(
+                                'Please select both start and destination points');
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(double.infinity, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Enter Route',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Enter Route',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          startPoint = null;
+                          endPoint = null;
+                          routePoints = [];
+                          _startPointController.clear();
+                          _destinationController.clear();
+                          searchResults = [];
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(45, 45),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Icon(Icons.clear),
+                    ),
+                  ],
                 ),
               ],
             ),
