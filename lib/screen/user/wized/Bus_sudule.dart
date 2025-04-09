@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:transport_system/screen/user/wized/addroute.dart';
 
 class UrTransportScreen extends StatefulWidget {
   const UrTransportScreen({super.key});
@@ -118,37 +117,6 @@ class _TransportScreenState extends State<UrTransportScreen> {
                     price: "£5.00",
                   ),
                 ],
-              ),
-            ),
-
-            // Add New Route Button
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Addroute(),
-                      ));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.add, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text(
-                      "Add new route",
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
