@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transport_system/screen/driver/addroute.dart';
+import 'package:transport_system/screen/driver/wized/addroute.dart';
 
 class DriTransportScreen extends StatefulWidget {
   const DriTransportScreen({super.key});

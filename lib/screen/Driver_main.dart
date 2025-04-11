@@ -5,7 +5,7 @@ import 'package:transport_system/screen/driver/Bus_sudule.dart';
 import 'package:transport_system/screen/driver/DrMapPage2.dart';
 import 'package:transport_system/screen/driver/map.dart';
 import 'package:transport_system/screen/driver/profile_screen.dart';
-import 'package:transport_system/screen/driver/setting_screen.dart';
+import 'package:transport_system/screen/driver/wized/setting_screen.dart';
 import 'dart:io';
 
 class DApp extends StatefulWidget {
@@ -58,7 +58,7 @@ class _DAppState extends State<DApp> {
       home: Scaffold(
         key: _scaffoldKey, // Assign the scaffold key
         appBar: AppBar(
-          title: Text("D Transport system"),
+          title: Text("Driver TS"),
           backgroundColor: Colors.green,
           foregroundColor: const Color.fromARGB(255, 255, 251, 251),
           leading: IconButton(
@@ -72,7 +72,8 @@ class _DAppState extends State<DApp> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              DrawerHeader(
+              Container(
+                height: 250,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 margin: EdgeInsets.zero,
                 decoration: BoxDecoration(
@@ -91,6 +92,7 @@ class _DAppState extends State<DApp> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: 35), // Add space from top
                     CircleAvatar(
                       radius: 35,
                       backgroundColor: Colors.white,

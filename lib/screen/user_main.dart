@@ -75,7 +75,8 @@ class _UAppState extends State<UApp> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              DrawerHeader(
+              Container(
+                height: 250,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 margin: EdgeInsets.zero,
                 decoration: BoxDecoration(
@@ -94,6 +95,7 @@ class _UAppState extends State<UApp> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: 35), // Add space from top
                     CircleAvatar(
                       radius: 35,
                       backgroundColor: Colors.white,
