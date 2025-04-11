@@ -339,7 +339,8 @@ class _AddrouteState extends State<Addroute> {
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 child: const Text("Add New Route",
-                    style: TextStyle(color: Colors.white)),
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 129, 120, 120))),
               ),
               const SizedBox(height: 16),
               Expanded(
