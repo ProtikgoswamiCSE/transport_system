@@ -104,21 +104,7 @@ class _TransportScreenState extends State<UrTransportScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Transport Route List
-            Expanded(
-              child: ListView(
-                children: const [
-                  TransportCard(
-                    icon: Icons.train,
-                    title: "Central Line",
-                    from: "Great Portland St.",
-                    to: "Baker Street",
-                    time: "16:15",
-                    price: "£5.00",
-                  ),
-                ],
-              ),
-            ),
+            // Transport Route Lis
           ],
         ),
       ),
