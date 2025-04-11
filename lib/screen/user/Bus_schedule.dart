@@ -8,8 +8,8 @@ class UrTransportScreen extends StatefulWidget {
 }
 
 class _TransportScreenState extends State<UrTransportScreen> {
-  String? selectedPlace;
-  String? selectedTransport;
+  String? selectedPlace = "Dhanmondi";
+  String? selectedTransport = "Mirpur";
 
   final List<String> places = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
   final List<String> endPlace = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
@@ -42,11 +42,18 @@ class _TransportScreenState extends State<UrTransportScreen> {
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     value: selectedPlace,
-                    hint: const Text("start Place"),
+                    hint: const Text("start Place",
+                        style: TextStyle(fontSize: 10)),
+                    isDense: true,
+                    menuMaxHeight: 200,
                     items: places.map((String place) {
                       return DropdownMenuItem<String>(
                         value: place,
-                        child: Text(place),
+                        child: Text(place,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black87,
+                            )),
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
@@ -55,10 +62,17 @@ class _TransportScreenState extends State<UrTransportScreen> {
                       });
                     },
                     decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      constraints: BoxConstraints(maxHeight: 40),
                     ),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -67,11 +81,18 @@ class _TransportScreenState extends State<UrTransportScreen> {
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     value: selectedTransport,
-                    hint: const Text("End Place"),
+                    hint:
+                        const Text("End Place", style: TextStyle(fontSize: 10)),
+                    isDense: true,
+                    menuMaxHeight: 200,
                     items: endPlace.map((String transport) {
                       return DropdownMenuItem<String>(
                         value: transport,
-                        child: Text(transport),
+                        child: Text(transport,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black87,
+                            )),
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
@@ -80,10 +101,17 @@ class _TransportScreenState extends State<UrTransportScreen> {
                       });
                     },
                     decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      constraints: BoxConstraints(maxHeight: 40),
                     ),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(width: 8),
