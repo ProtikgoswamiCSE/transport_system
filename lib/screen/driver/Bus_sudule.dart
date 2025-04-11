@@ -1,227 +1,160 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'package:transport_system/screen/driver/wized/addroute.dart';
 
 class DriTransportScreen extends StatefulWidget {
   const DriTransportScreen({super.key});
 
   @override
-  _TransportScreenState createState() => _TransportScreenState();
+  State<DriTransportScreen> createState() => _DriTransportScreenState();
 }
 
-class _TransportScreenState extends State<DriTransportScreen> {
-  String? selectedPlace;
-  String? selectedEndPlace;
+class _DriTransportScreenState extends State<DriTransportScreen> {
+  List<Map<String, dynamic>> busRoutes = [];
 
-  final List<String> places = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
-  final List<String> endPlace = ["Dhanmondi", "Mirpur", "Uttara", "DSC"];
+  @override
+  void initState() {
+    super.initState();
+    loadRoutes();
+  }
 
-  void _onSearch() {
-    if (selectedPlace != null && selectedEndPlace != null) {
-      print(
-          "Searching for transport from $selectedPlace to $selectedEndPlace...");
-    } else {
-      print("Please select both start and end places.");
+  Future<void> loadRoutes() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      List<String> routesJson = prefs.getStringList('bus_routes') ?? [];
+      setState(() {
+        busRoutes = routesJson
+            .map((String jsonString) =>
+                json.decode(jsonString) as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (e) {
+      print('Error loading routes: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading routes: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteRoute(int index) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        busRoutes.removeAt(index);
+      });
+      // Save updated routes back to SharedPreferences
+      List<String> updatedRoutesJson = busRoutes
+          .map((Map<String, dynamic> route) => json.encode(route))
+          .toList();
+      await prefs.setStringList('bus_routes', updatedRoutesJson);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Route deleted successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      print('Error deleting route: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting route: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Dropdowns and Search Button in One Row
-            Row(
-              children: [
-                // Place Dropdown
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: selectedPlace,
-                    hint: const Text("Start Place"),
-                    items: places.map((String place) {
-                      return DropdownMenuItem<String>(
-                        value: place,
-                        child: Text(place),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedPlace = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-
-                // End Place Dropdown
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: selectedEndPlace,
-                    hint: const Text("End Place"),
-                    items: endPlace.map((String place) {
-                      return DropdownMenuItem<String>(
-                        value: place,
-                        child: Text(place),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedEndPlace = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-
-                // Search Button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                    textStyle: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: _onSearch,
-                  child: const Icon(Icons.search, color: Colors.white),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Transport Route List
-            Expanded(
-              child: ListView(
-                children: const [
-                  TransportCard(
-                    icon: Icons.train,
-                    title: "Central Line",
-                    from: "Great Portland St.",
-                    to: "Baker Street",
-                    time: "16:15",
-                    price: "£5.00",
-                  ),
-                ],
-              ),
-            ),
-
-            // Add New Route Button
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Addroute(),
-                      ));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.add, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text(
-                      "Add new route",
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+      appBar: AppBar(
+        title: const Text(
+          'Bus Schedule',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Addroute()),
+              );
+              if (result == true) {
+                loadRoutes(); // Reload routes when returning from Add Route page with success
+              }
+            },
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class TransportCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String from;
-  final String to;
-  final String time;
-  final String price;
-
-  const TransportCard({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.from,
-    required this.to,
-    required this.time,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title and Time
-            Row(
-              children: [
-                Icon(icon, color: Colors.blue),
-                const SizedBox(width: 8),
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-                const Spacer(),
-                const Icon(Icons.access_time, size: 16),
-                const SizedBox(width: 4),
-                Text("Next arrival: Today / $time"),
-              ],
+      body: busRoutes.isEmpty
+          ? const Center(
+              child: Text(
+                'No routes available.\nTap + to add new routes.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            )
+          : ListView.builder(
+              itemCount: busRoutes.length,
+              itemBuilder: (context, index) {
+                final route = busRoutes[index];
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: ListTile(
+                    leading:
+                        const Icon(Icons.directions_bus, color: Colors.green),
+                    title: Text(
+                      "Bus № ${route["busNumber"]}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("From: ${route["from"]} → To: ${route["to"]}"),
+                        Text("Date: ${route["date"]} Time: ${route["time"]}"),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Delete Route"),
+                              content: const Text(
+                                  "Are you sure you want to delete this route?"),
+                              actions: [
+                                TextButton(
+                                  child: const Text("Cancel"),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                                TextButton(
+                                  child: const Text("Delete",
+                                      style: TextStyle(color: Colors.red)),
+                                  onPressed: () {
+                                    deleteRoute(index);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 8),
-
-            // From - To
-            Row(
-              children: [
-                const Icon(Icons.arrow_downward, size: 16),
-                const SizedBox(width: 4),
-                Expanded(child: Text("From: $from")),
-              ],
-            ),
-            Row(
-              children: [
-                const Icon(Icons.arrow_upward, size: 16),
-                const SizedBox(width: 4),
-                Expanded(child: Text("To: $to")),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Price
-            Text(
-              "Price: $price",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
