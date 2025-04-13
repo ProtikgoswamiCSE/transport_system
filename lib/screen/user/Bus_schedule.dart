@@ -29,7 +29,7 @@ class _TransportScreenState extends State<UrTransportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favourite Routes',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
         centerTitle: true,
         elevation: 0,
       ),
