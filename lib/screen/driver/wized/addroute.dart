@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Addroute extends StatefulWidget {
@@ -10,6 +9,7 @@ class Addroute extends StatefulWidget {
 }
 
 class _AddrouteState extends State<Addroute> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? selectedStartPlace;
   String? selectedEndPlace;
   String? busNumber;
@@ -35,18 +35,24 @@ class _AddrouteState extends State<Addroute> {
         return;
       }
 
-      final firestore = FirebaseFirestore.instance;
+      print('Saving routes to Firebase: $transportRoutes'); // Debug print
 
       // Add each route to Firestore
       for (var route in transportRoutes) {
-        await firestore.collection('Addrute').add({
-          'busNumber': route['busNumber'],
-          'from': route['from'],
-          'to': route['to'],
-          'date': route['date'],
-          'time': route['time'],
-          'timestamp': FieldValue.serverTimestamp(),
-        });
+        try {
+          final docRef = await _firestore.collection('bus_routes').add({
+            'busNumber': route['busNumber'],
+            'from': route['from'],
+            'to': route['to'],
+            'date': route['date'],
+            'time': route['time'],
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+          print('Route saved to Firebase with ID: ${docRef.id}'); // Debug print
+        } catch (e) {
+          print('Error saving individual route: $e');
+          throw Exception('Failed to save route: $e');
+        }
       }
 
       if (mounted) {
@@ -66,7 +72,7 @@ class _AddrouteState extends State<Addroute> {
         });
       }
     } catch (e) {
-      print('Error saving routes: $e');
+      print('Error saving routes to Firebase: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
