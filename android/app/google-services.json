@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "433419974979",
+    "project_id": "transpoty-system",
+    "storage_bucket": "transpoty-system.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433419974979:android:d96166358f9af9789957f6",
+        "android_client_info": {
+          "package_name": "com.example.transport_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxfjE_IogaL2pVxx3UnWYzjoGDCpZqmsU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
