@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:transport_system/screen/driver/wized/addroute.dart';
+import 'package:transport_system/utils/database_helper.dart';
 
 class DriTransportScreen extends StatefulWidget {
   const DriTransportScreen({super.key});
@@ -11,6 +10,7 @@ class DriTransportScreen extends StatefulWidget {
 }
 
 class _DriTransportScreenState extends State<DriTransportScreen> {
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<Map<String, dynamic>> busRoutes = [];
 
   @override
@@ -21,13 +21,9 @@ class _DriTransportScreenState extends State<DriTransportScreen> {
 
   Future<void> loadRoutes() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      List<String> routesJson = prefs.getStringList('bus_routes') ?? [];
+      final routes = await _databaseHelper.getAllRoutes();
       setState(() {
-        busRoutes = routesJson
-            .map((String jsonString) =>
-                json.decode(jsonString) as Map<String, dynamic>)
-            .toList();
+        busRoutes = routes;
       });
     } catch (e) {
       print('Error loading routes: $e');
@@ -40,17 +36,10 @@ class _DriTransportScreenState extends State<DriTransportScreen> {
     }
   }
 
-  Future<void> deleteRoute(int index) async {
+  Future<void> deleteRoute(int id) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      setState(() {
-        busRoutes.removeAt(index);
-      });
-      // Save updated routes back to SharedPreferences
-      List<String> updatedRoutesJson = busRoutes
-          .map((Map<String, dynamic> route) => json.encode(route))
-          .toList();
-      await prefs.setStringList('bus_routes', updatedRoutesJson);
+      await _databaseHelper.deleteRoute(id);
+      loadRoutes(); // Reload the routes after deletion
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -118,7 +107,8 @@ class _DriTransportScreenState extends State<DriTransportScreen> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("From: ${route["from"]} → To: ${route["to"]}"),
+                        Text(
+                            "From: ${route["fromLocation"]} → To: ${route["toLocation"]}"),
                         Text("Date: ${route["date"]} Time: ${route["time"]}"),
                       ],
                     ),
@@ -141,7 +131,7 @@ class _DriTransportScreenState extends State<DriTransportScreen> {
                                   child: const Text("Delete",
                                       style: TextStyle(color: Colors.red)),
                                   onPressed: () {
-                                    deleteRoute(index);
+                                    deleteRoute(route['id']);
                                     Navigator.of(context).pop();
                                   },
                                 ),

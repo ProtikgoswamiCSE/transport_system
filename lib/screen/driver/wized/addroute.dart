@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+// ignore: depend_on_referenced_packages
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Addroute extends StatefulWidget {
   const Addroute({super.key});
@@ -35,24 +35,19 @@ class _AddrouteState extends State<Addroute> {
         return;
       }
 
-      final prefs = await SharedPreferences.getInstance();
+      final firestore = FirebaseFirestore.instance;
 
-      // Get existing routes
-      List<String> existingRoutesJson = prefs.getStringList('bus_routes') ?? [];
-      List<Map<String, dynamic>> existingRoutes = existingRoutesJson
-          .map((String jsonString) =>
-              json.decode(jsonString) as Map<String, dynamic>)
-          .toList();
-
-      // Add new routes
-      existingRoutes.addAll(transportRoutes);
-
-      // Save all routes back to SharedPreferences
-      List<String> updatedRoutesJson = existingRoutes
-          .map((Map<String, dynamic> route) => json.encode(route))
-          .toList();
-
-      await prefs.setStringList('bus_routes', updatedRoutesJson);
+      // Add each route to Firestore
+      for (var route in transportRoutes) {
+        await firestore.collection('Addrute').add({
+          'busNumber': route['busNumber'],
+          'from': route['from'],
+          'to': route['to'],
+          'date': route['date'],
+          'time': route['time'],
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
